@@ -13,12 +13,12 @@ var Enemy = function(x,y,speed) {
 Enemy.prototype.update = function(dt) {
     this.x += this.speed * dt;
     // 505 is the canvas width
-    // if the enemy reaches canvas.width
-    // it loops to left side
+    // when the player reaches this point, or further
+    // it will be set back to point 0 on the x-axis
     if (this.x >= 505) {
         this.x = 0;
     }
-    // check for collision with enemies or barrier-walls
+    // check for collision with enemies or canvas-walls
     checkCollision(this);
 };
 
@@ -60,20 +60,7 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
-Player.prototype.update = function() {
-
-}
-
-var checkCollision = function(enemy) {
-    // check for collision between enemy and player
-    if (player.y + 131 >= enemy.y + 90
-        && player.x + 25 <= enemy.x + 88
-        && player.y + 73 <= enemy.y + 135
-        && player.x + 76 >= enemy.x + 11) {
-        player.x = 202.5;
-        player.y = 383;
-    }
-
+Player.prototype.update = function() {    
     // check for player reaching top of canvas and winning the game
     // if player wins, add 1 to the score and level
     // pass score as an argument to the increaseDifficulty function
@@ -87,9 +74,26 @@ var checkCollision = function(enemy) {
 
         score += 1;
         gameLevel += 1;
-        console.log('current score: ' + score + ', current level: ' + gameLevel);
         increaseDifficulty(score);
+    }
+}
 
+var checkCollision = function(enemy) {
+    // check for collision between enemy and player
+    if (player.y + 131 >= enemy.y + 90
+        && player.x + 25 <= enemy.x + 88
+        && player.y + 73 <= enemy.y + 135
+        && player.x + 76 >= enemy.x + 11) {
+        player.x = 202.5;
+        player.y = 383;
+    }
+    // check for player out of the canvas walls
+    // reset the player to initial location
+    if(player.x < 0 
+    || player.x >= 495
+    || player.y >= 440) {
+        player.x = 202.5;
+        player.y = 383;
     }
 };
 
@@ -111,7 +115,7 @@ var player = new Player(202.5, 383, 50);
 var score = 0;
 var gameLevel = 1;
 var scoreLevelDiv = document.createElement('div');
-var enemy = new Enemy(0, Math.random() * 180 + 150, Math.random() * 256);
+var enemy = new Enemy(0, Math.random() * 180 + 50, Math.random() * 256);
 
 allEnemies.push(enemy);
 
