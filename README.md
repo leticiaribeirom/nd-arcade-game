@@ -14,12 +14,12 @@ The enemies move in varying speeds on the paved block portion of the scene.
 ## Installation
 In order to run the application:
 
-- Download the GitHub zip file or clone the repository onto your local workstation:
+- Download the GitHub zip file 
    - Unzip the file using WinZip, WinRAR or any other file extracting app (which supports .zip format).
    - Open the unzipped folder.
    - Right click on index.html and open it in your browser.
    - Play the game.
-   or 
+- Another way is to clone the repository onto your local workstation:
    `git clone https://github.com/leticiaribeirom/frontend-nanodegree-arcade-game.git`
    - Open the repository folder.
    - Right click on index.html and open it in your browser.
