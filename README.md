@@ -20,7 +20,7 @@ In order to run the application:
    - Right click on index.html and open it in your browser.
    - Play the game.
 - Another way is to clone the repository onto your local workstation:
-   `git clone https://github.com/leticiaribeirom/frontend-nanodegree-arcade-game.git`
+   - `git clone https://github.com/leticiaribeirom/frontend-nanodegree-arcade-game.git`
    - Open the repository folder.
    - Right click on index.html and open it in your browser.
    - Play the game.
