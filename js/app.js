@@ -5,7 +5,7 @@ var Enemy = function(x,y,speed) {
     this.y = y;
     this.speed = speed;
     // The image/sprite for the enemies
-    this.sprite = 'images/char-boy.png';
+    this.sprite = 'images/enemy-bug.png';
 };
 
 // Update the enemy's position, required method for game
@@ -43,6 +43,8 @@ var Player = function(x, y, speed) {
 // Draw the player on the screen, required method for game
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    displayScore(score);
+    displayLevel(gameLevel);
 };
 
 Player.prototype.handleInput = function(keyPress) {
@@ -60,6 +62,23 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
+var displayScore = function(aScore) {
+    var canvas = document.getElementsByTagName('canvas');
+    var firstCanvasTag = canvas[0];
+
+    // add player score div element created
+    scoreDiv.innerHTML = 'Score: ' + aScore;
+    document.body.insertBefore(scoreDiv, firstCanvasTag[0]);
+};
+
+var displayLevel = function(aLevel) {
+    var canvas = document.getElementsByTagName('canvas');
+    var firstCanvasTag = canvas[0];
+
+    // add player level to div element created
+    levelDiv.innerHTML = 'Level: ' + aLevel;
+    document.body.insertBefore(levelDiv, firstCanvasTag[0]);
+};
 Player.prototype.update = function() {    
     // check for player reaching top of canvas and winning the game
     // if player wins, add 1 to the score and level
@@ -114,7 +133,8 @@ var allEnemies = [];
 var player = new Player(202.5, 383, 50);
 var score = 0;
 var gameLevel = 1;
-var scoreLevelDiv = document.createElement('div');
+var scoreDiv = document.createElement('div');
+var levelDiv = document.createElement('div');
 var enemy = new Enemy(0, Math.random() * 180 + 50, Math.random() * 256);
 
 allEnemies.push(enemy);
