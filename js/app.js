@@ -1,5 +1,6 @@
+'use strict';
 // Enemy class 
-var Enemy = function(x,y,speed) {
+var Enemy = function (x, y, speed) {
     // Setting the enemy's initial location and speed
     this.x = x;
     this.y = y;
@@ -10,27 +11,27 @@ var Enemy = function(x,y,speed) {
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
+Enemy.prototype.update = function (dt) {
     this.x += this.speed * dt;
     // 505 is the canvas width
-    // when the player reaches this point, or further
-    // it will be set back to point 0 on the x-axis
+    // when the enemy reaches this point, or further
+    // it will be set back to point -50 on the x-axis
     if (this.x >= 505) {
-        this.x = 0;
+        this.x = -50;
     }
     // check for collision with enemies or canvas-walls
     checkCollision(this);
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Player class
 // This class requires an update(), render() and
 // a handleInput() method.
-var Player = function(x, y, speed) {
+var Player = function (x, y, speed) {
     // Setting the player's initial location and speed
     this.x = x;
     this.y = y;
@@ -41,13 +42,13 @@ var Player = function(x, y, speed) {
 };
 
 // Draw the player on the screen, required method for game
-Player.prototype.render = function() {
+Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
     displayScore(score);
     displayLevel(gameLevel);
 };
 
-Player.prototype.handleInput = function(keyPress) {
+Player.prototype.handleInput = function (keyPress) {
     if (keyPress == 'left') {
         player.x -= player.speed;
     }
@@ -62,7 +63,7 @@ Player.prototype.handleInput = function(keyPress) {
     }
 };
 
-var displayScore = function(aScore) {
+var displayScore = function (aScore) {
     var canvas = document.getElementsByTagName('canvas');
     var firstCanvasTag = canvas[0];
 
@@ -71,7 +72,7 @@ var displayScore = function(aScore) {
     document.body.insertBefore(scoreDiv, firstCanvasTag[0]);
 };
 
-var displayLevel = function(aLevel) {
+var displayLevel = function (aLevel) {
     var canvas = document.getElementsByTagName('canvas');
     var firstCanvasTag = canvas[0];
 
@@ -79,11 +80,11 @@ var displayLevel = function(aLevel) {
     levelDiv.innerHTML = 'Level: ' + aLevel;
     document.body.insertBefore(levelDiv, firstCanvasTag[0]);
 };
-Player.prototype.update = function() {    
+Player.prototype.update = function () {
     // check for player reaching top of canvas and winning the game
     // if player wins, add 1 to the score and level
     // pass score as an argument to the increaseDifficulty function
-    if (player.y + 63 <= 0) {        
+    if (player.y + 63 <= 0) {
         player.x = 202.5;
         player.y = 383;
         console.log('you made it!');
@@ -97,31 +98,31 @@ Player.prototype.update = function() {
     }
 }
 
-var checkCollision = function(enemy) {
+var checkCollision = function (enemy) {
     // check for collision between enemy and player
-    if (player.y + 131 >= enemy.y + 90
-        && player.x + 25 <= enemy.x + 88
-        && player.y + 73 <= enemy.y + 135
-        && player.x + 76 >= enemy.x + 11) {
+    if (player.y + 131 >= enemy.y + 90 &&
+        player.x + 25 <= enemy.x + 88 &&
+        player.y + 73 <= enemy.y + 135 &&
+        player.x + 76 >= enemy.x + 11) {
         player.x = 202.5;
         player.y = 383;
     }
     // check for player out of the canvas walls
     // reset the player to initial location
-    if(player.x < 0 
-    || player.x >= 495
-    || player.y >= 440) {
+    if (player.x < 0 ||
+        player.x >= 495 ||
+        player.y >= 440) {
         player.x = 202.5;
         player.y = 383;
     }
 };
 
 // this function increase the number of enemies on screen based on player's score
-var increaseDifficulty = function(numberEnemies) {
+var increaseDifficulty = function (numberEnemies) {
     // remove all previous enemies on canvas
     allEnemies.length = 0;
 
-      // load new set of enemies
+    // load new set of enemies
     for (var i = 0; i <= numberEnemies; i++) {
         var enemy = new Enemy(0, Math.random() * 180 + 50, Math.random() * 256);
         allEnemies.push(enemy);
@@ -141,7 +142,7 @@ allEnemies.push(enemy);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
