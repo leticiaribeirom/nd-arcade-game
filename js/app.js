@@ -1,4 +1,9 @@
 'use strict';
+
+var appConfig = {
+    playerInitialPosX: 202,
+    playerInitialPosY: 413,
+}
 // Enemy class 
 var Enemy = function (x, y, speed) {
     // Setting the enemy's initial location and speed
@@ -17,10 +22,9 @@ Enemy.prototype.update = function (dt) {
     // when the enemy reaches this point, or further
     // it will be set back to point -50 on the x-axis
     if (this.x >= 505) {
-        this.x = -50;
+        this.x = -100;
     }
-    // check for collision with enemies or canvas-walls
-    checkCollision(this);
+
 };
 
 // Draw the enemy on the screen, required method for game
@@ -50,18 +54,72 @@ Player.prototype.render = function () {
 
 Player.prototype.handleInput = function (keyPress) {
     if (keyPress == 'left') {
-        player.x -= player.speed;
+        this.x -= this.speed;
     }
     if (keyPress == 'right') {
-        player.x += player.speed;
+        this.x += this.speed;
     }
     if (keyPress == 'up') {
-        player.y -= player.speed - 20;
+        this.y -= this.speed - 20;
     }
     if (keyPress == 'down') {
-        player.y += player.speed - 20;
+        this.y += this.speed - 20;
     }
 };
+
+Player.prototype.collides = function (enemy) {
+    if (this.y + 131 >= enemy.y + 90 &&
+        this.x + 25 <= enemy.x + 88 &&
+        this.y + 73 <= enemy.y + 135 &&
+        this.x + 76 >= enemy.x + 11) {
+        return true;
+    }
+    return false;
+}
+
+Player.prototype.collidesCanvas = function () {
+    if (this.x < 0 ||
+        this.x >= 450 ||
+        this.y >= 440) {
+        return true;
+    }
+    return false;
+}
+
+Player.prototype.resetPlayer = function () {
+    this.x = appConfig.playerInitialPosX;
+    this.y = appConfig.playerInitialPosY;
+}
+
+Player.prototype.update = function () {
+    // check for player reaching top of canvas and winning the game
+    // if player wins, add 1 to the score and level
+    // pass score as an argument to the increaseDifficulty function
+    var p = this;
+
+    if (this.collidesCanvas()) {
+        this.resetPlayer();
+    }
+
+    allEnemies.forEach(function (e) {
+        if (p.collides(e)) {
+            p.resetPlayer();
+        }
+    });
+
+    if (this.y + 7 <= 0) {
+        this.x = 202.5;
+        this.y = 413;
+        console.log('you made it!');
+
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, 505, 171);
+
+        score += 1;
+        gameLevel += 1;
+        increaseDifficulty(score);
+    }
+}
 
 var displayScore = function (aScore) {
     var canvas = document.getElementsByTagName('canvas');
@@ -80,42 +138,7 @@ var displayLevel = function (aLevel) {
     levelDiv.innerHTML = 'Level: ' + aLevel;
     document.body.insertBefore(levelDiv, firstCanvasTag[0]);
 };
-Player.prototype.update = function () {
-    // check for player reaching top of canvas and winning the game
-    // if player wins, add 1 to the score and level
-    // pass score as an argument to the increaseDifficulty function
-    if (player.y + 63 <= 0) {
-        player.x = 202.5;
-        player.y = 383;
-        console.log('you made it!');
 
-        ctx.fillStyle = 'white';
-        ctx.fillRect(0, 0, 505, 171);
-
-        score += 1;
-        gameLevel += 1;
-        increaseDifficulty(score);
-    }
-}
-
-var checkCollision = function (enemy) {
-    // check for collision between enemy and player
-    if (player.y + 131 >= enemy.y + 90 &&
-        player.x + 25 <= enemy.x + 88 &&
-        player.y + 73 <= enemy.y + 135 &&
-        player.x + 76 >= enemy.x + 11) {
-        player.x = 202.5;
-        player.y = 383;
-    }
-    // check for player out of the canvas walls
-    // reset the player to initial location
-    if (player.x < 0 ||
-        player.x >= 495 ||
-        player.y >= 440) {
-        player.x = 202.5;
-        player.y = 383;
-    }
-};
 
 // this function increase the number of enemies on screen based on player's score
 var increaseDifficulty = function (numberEnemies) {
@@ -131,7 +154,7 @@ var increaseDifficulty = function (numberEnemies) {
 
 
 var allEnemies = [];
-var player = new Player(202.5, 383, 50);
+var player = new Player(202.5, 413, 50);
 var score = 0;
 var gameLevel = 1;
 var scoreDiv = document.createElement('div');
